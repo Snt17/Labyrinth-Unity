@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     {
         Id[id - 1] = id;
         Message[id - 1] = msg;
+        PlayerPrefs.SetInt("IdNote" + id, id);
+        PlayerPrefs.SetString("MsgNote" + id, msg);
     }
 
     private void Update()
@@ -21,6 +23,23 @@ public class Player : MonoBehaviour
             {
                 Debug.Log(Id[i] + " - " + Message[i]);
             }
+        }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            LoadAllNotes();
+        }
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            PlayerPrefs.DeleteAll();
+        }
+    }
+
+    public void LoadAllNotes()
+    {
+        for (int i = 0; i < Id.Length; i++)
+        {
+            Id[i] = PlayerPrefs.GetInt("IdNote" + (i + 1));
+            Message[i] = PlayerPrefs.GetString("MsgNote" + (i + 1));
         }
     }
 }
