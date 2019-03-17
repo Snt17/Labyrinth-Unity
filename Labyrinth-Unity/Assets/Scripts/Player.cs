@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,13 +7,21 @@ public class Player : MonoBehaviour
 {
     public int[] Id = new int[0];
     public string[] Message = new string[0];
+    string IdText = "";
+    public GameObject[] Obj;
+
+    public void Start()
+    {
+        if (PlayerPrefs.HasKey("IdNote"))
+        {
+            IdText = PlayerPrefs.GetString("IdNote");
+        }
+    }
 
     public void SaveNote(int id, string msg)
     {
-        Id[id - 1] = id;
-        Message[id - 1] = msg;
-        PlayerPrefs.SetInt("IdNote" + id, id);
-        PlayerPrefs.SetString("MsgNote" + id, msg);
+        IdText = IdText + Convert.ToString(id - 1) + ",";
+        PlayerPrefs.SetString("IdNote", IdText);
     }
 
     private void Update()
@@ -28,18 +37,23 @@ public class Player : MonoBehaviour
         {
             LoadAllNotes();
         }
+
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             PlayerPrefs.DeleteAll();
+            IdText = "";
         }
     }
 
     public void LoadAllNotes()
     {
-        for (int i = 0; i < Id.Length; i++)
+        string IdString = PlayerPrefs.GetString("IdNote");
+        string[] idString = IdString.Split(',');
+
+        for (int i = 0; i < idString.Length - 1; i++)
         {
-            Id[i] = PlayerPrefs.GetInt("IdNote" + (i + 1));
-            Message[i] = PlayerPrefs.GetString("MsgNote" + (i + 1));
+            Id[i] = Convert.ToInt32(idString[i]) + 1;
+            Message[i] = Obj[Id[i] - 1].GetComponent<FindingNotes>().Message;
         }
     }
 }
