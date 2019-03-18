@@ -5,55 +5,68 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int[] Id = new int[0];
-    public string[] Message = new string[0];
-    string IdText = "";
-    public GameObject[] Obj;
+    public int[] Ids = new int[0];
+    public string[] Messages = new string[0];
+    private string IdToString = "";
+    public GameObject[] Object;
 
     public void Start()
     {
-        if (PlayerPrefs.HasKey("IdNote"))
+        if (PlayerPrefs.HasKey("Notes"))
         {
-            IdText = PlayerPrefs.GetString("IdNote");
+            IdToString = PlayerPrefs.GetString("Notes");
         }
     }
 
-    public void SaveNote(int id, string msg)
+    public void SaveNote(int id)
     {
-        IdText = IdText + Convert.ToString(id - 1) + ",";
-        PlayerPrefs.SetString("IdNote", IdText);
+        string[] idtostring = IdToString.Split(',');
+        int count = 0;
+
+        for (int i = 0; i < idtostring.Length - 1; i++)
+        {
+            if (Convert.ToInt32(idtostring[i]) == (id - 1))
+            {
+                count++;
+            }
+        }
+        if (count == 0)
+        {
+            IdToString = IdToString + Convert.ToString(id - 1) + ",";
+        }
+        PlayerPrefs.SetString("Notes", IdToString);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            for (int i = 0; i < Id.Length; i++)
+            for (int i = 0; i < Ids.Length; i++)
             {
-                Debug.Log(Id[i] + " - " + Message[i]);
+                Debug.Log(Ids[i] + " - " + Messages[i]);
             }
         }
+ 
         if (Input.GetKeyDown(KeyCode.F9))
         {
-            LoadAllNotes();
+                LoadAllNotes();
         }
-
+ 
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             PlayerPrefs.DeleteAll();
-            IdText = "";
+            IdToString = "";
         }
     }
 
     public void LoadAllNotes()
     {
-        string IdString = PlayerPrefs.GetString("IdNote");
-        string[] idString = IdString.Split(',');
+        string[] idtostring = PlayerPrefs.GetString("Notes").Split(',');
 
-        for (int i = 0; i < idString.Length - 1; i++)
+        for (int i = 0; i < idtostring.Length - 1; i++)
         {
-            Id[i] = Convert.ToInt32(idString[i]) + 1;
-            Message[i] = Obj[Id[i] - 1].GetComponent<FindingNotes>().Message;
+            Ids[i] = Convert.ToInt32(idtostring[i]) + 1;
+            Messages[i] = Object[Ids[i] - 1].GetComponent<FindingNotes>().Message;
         }
     }
 }

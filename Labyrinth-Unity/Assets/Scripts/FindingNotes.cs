@@ -11,6 +11,6 @@ public class FindingNotes : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Note.SetActive(false);
-        other.GetComponent<Player>().SaveNote(Id, Message);
+        other.GetComponent<Player>().SaveNote(Id);
     }
 }
