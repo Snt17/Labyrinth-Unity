@@ -7,20 +7,20 @@ public class Player : MonoBehaviour
 {
     public int[] Ids = new int[0];
     public string[] Messages = new string[0];
-    private string IdToString = "";
+    private string _idToString = "";
     public GameObject[] Object;
 
     public void Start()
     {
         if (PlayerPrefs.HasKey("Notes"))
         {
-            IdToString = PlayerPrefs.GetString("Notes");
+            _idToString = PlayerPrefs.GetString("Notes");
         }
     }
 
     public void SaveNote(int id)
     {
-        string[] idtostring = IdToString.Split(',');
+        string[] idtostring = _idToString.Split(',');
         int count = 0;
 
         for (int i = 0; i < idtostring.Length - 1; i++)
@@ -32,9 +32,9 @@ public class Player : MonoBehaviour
         }
         if (count == 0)
         {
-            IdToString = IdToString + Convert.ToString(id - 1) + ",";
+            _idToString = _idToString + Convert.ToString(id - 1) + ",";
         }
-        PlayerPrefs.SetString("Notes", IdToString);
+        PlayerPrefs.SetString("Notes", _idToString);
     }
 
     private void Update()
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             PlayerPrefs.DeleteAll();
-            IdToString = "";
+            _idToString = "";
         }
     }
 
